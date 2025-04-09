@@ -1,25 +1,31 @@
-import { db } from '../config/database.js';
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
+import { db } from "../config/database.js";
 
-export default class User {
-    static async create(email, password) {
-        if (!email || !password) {
-            throw new Error("Email and password are required");
-        }
+const SALT_ROUNDS = 10;
 
-        const saltRounds = 12;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+const User = {
+  create: async (username, email, password) => {
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-        const { lastID } = await db.run(
-            `INSERT INTO users (email, password) VALUES (?, ?)`,
-            [email, hashedPassword]
-        );
+    const result = await db.run(
+      "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+      [username, email, hashedPassword]
+    );
 
-        return { id: lastID };
-    }
+    return {
+      id: result.lastID,
+      username,
+      email,
+    };
+  },
 
-    static async findByEmail(email) {
-        if (!email) throw new Error("Email is required");
-        return await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
-    }
-}
+  findByUsername: async (username) => {
+    return await db.get("SELECT * FROM users WHERE username = ?", [username]);
+  },
+
+  findByEmail: async (email) => {
+    return await db.get("SELECT * FROM users WHERE email = ?", [email]);
+  },
+};
+
+export default User;

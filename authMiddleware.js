@@ -19,7 +19,7 @@ export const authenticate = async (req, res, next) => {
 }
 
 export const checkApiKey = async (req, res, next) => {
-    const apiKey = req.header('x-api-key'); // Get key from headers
+    const apiKey = req.header('api-key');
   
     if (!apiKey) {
       return res.status(401).json({ error: "API key missing" });
