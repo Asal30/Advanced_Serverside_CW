@@ -42,7 +42,11 @@ const User = {
       "UPDATE users SET user_type = ? WHERE id = ?",
       [userType, userId]
     );
-  }
+  },
+  count: async () => {
+    const row = await db.get("SELECT COUNT(*) as count FROM users");
+    return row.count;
+  },
 };
 
 export default User;

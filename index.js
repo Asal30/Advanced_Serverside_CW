@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
 import countryRoutes from './routes/countryRoutes.js';
+import adminRoutes from "./routes/adminRoutes.js";
 import { authenticate } from "./authMiddleware.js";
 
 dotenv.config();
@@ -18,7 +19,8 @@ app.use(cors({
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use('/api', authenticate);
-app.use('/api/countries', countryRoutes);
+app.use('/api/countries', authenticate, countryRoutes);
+app.use("/api/admin", authenticate, adminRoutes);
 
 
 app.listen(3000, () => {

@@ -9,14 +9,14 @@ export const authenticate = async (req, res, next) => {
 
   try {
       const decoded = jwt.verify(token, process.env.JWT_KEY);
-      console.log("Decoded token:", decoded);  // Log the decoded token to check if 'id' exists
+      console.log("Decoded token:", decoded);
       req.userId = decoded.id;
       if (!req.userId) {
           throw new Error("User ID not found in token");
       }
       next();
   } catch (error) {
-      console.error("Authentication error:", error.message); // Log error details
+      console.error("Authentication error:", error.message);
       res.status(401).json({ error: "Invalid token" });
   }
 }

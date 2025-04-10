@@ -31,6 +31,10 @@ const ApiKey = {
             [key]
         );
     },
+    countActive: async () => {
+        const row = await db.get("SELECT COUNT(*) as count FROM api_keys");
+        return row.count;
+    },
 };
 
 export default ApiKey;
