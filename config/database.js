@@ -12,7 +12,9 @@ await db.exec(`
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_type TEXT DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_user_type CHECK (user_type IN ('admin', 'user'))
   )
 `);
 
@@ -21,6 +23,7 @@ await db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     key TEXT UNIQUE NOT NULL,
+    name TEXT,
     usage_count INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -33,7 +36,7 @@ await db.exec(`
     name TEXT UNIQUE NOT NULL,
     currency TEXT,
     capital TEXT,
-    languages TEXT, -- Store as JSON string
+    languages TEXT,
     flag TEXT,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
@@ -41,6 +44,12 @@ await db.exec(`
 
 await db.exec('CREATE INDEX IF NOT EXISTS idx_country_name ON countries (name)');
 
+// await db.exec("DROP TABLE IF EXISTS api_keys");
+// await db.exec("DROP TABLE IF EXISTS users");
+// await db.exec("DROP TABLE IF EXISTS countries");
+
 // await db.exec("DELETE FROM api_keys");
 // await db.exec("DELETE FROM users");
 // await db.exec("DELETE FROM countries");
+
+export default db;

@@ -1,9 +1,9 @@
 import express from 'express';
-import { getCountryData } from '../controllers/countryController.js';
-import { authenticate, checkApiKey } from '../authMiddleware.js';
+import { getCountryData, getAllCountries } from '../controllers/countryController.js';
 
 const router = express.Router();
 
-router.get('/:name', authenticate, getCountryData);
+router.get('/:name', getCountryData);
+router.get('/', getAllCountries);
 
 export default router;
