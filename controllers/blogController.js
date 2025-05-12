@@ -24,10 +24,21 @@ export const getBlogById = async (req, res) => {
   }
 };
 
+export const getBlogsByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const blogs = await Blog.getByUserId(userId);
+    res.json(blogs);
+  } catch (error) {
+    console.error("Failed to fetch blogs by userId:", error);
+    res.status(500).json({ error: "Failed to fetch blogs by userId" });
+  }
+};
+
 export const createBlog = async (req, res) => {
   try {
-    const { title, description, country, date, image, likes = 0, comments = 0 } = req.body;
-    const newBlog = await Blog.create(title, description, country, date, image, likes, comments);
+    const { title, description, country, date, image, likes = 0, comments = 0, userId } = req.body;
+    const newBlog = await Blog.create(title, description, country, date, image, likes, comments, userId);
     res.status(201).json(newBlog);
   } catch (error) {
     console.error("Failed to create blog:", error);

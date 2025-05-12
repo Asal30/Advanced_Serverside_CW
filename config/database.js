@@ -52,7 +52,9 @@ await db.exec(`
     comments INTEGER DEFAULT 0,
     date TEXT NOT NULL,
     image TEXT, -- main image URL
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INTEGER NOT NULL, -- Foreign key to associate blogs with users
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   )
 `);
 
