@@ -49,6 +49,7 @@ export const login = async (req, res) => {
       token: accessToken,
       apiKey: row?.key || null,
       user_type: user.user_type,
+      userId: user.id,
     });
   } catch (error) {
     res.status(400).json({
