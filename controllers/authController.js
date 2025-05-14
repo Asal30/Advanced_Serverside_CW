@@ -38,7 +38,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, { expiresIn: "1h" });
+    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, { expiresIn: "12h" });
 
     const row = await db.get("SELECT key FROM api_keys WHERE user_id = ?", [
       user.id,

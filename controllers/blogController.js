@@ -10,6 +10,16 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
+export const getAllBlogsWithUserDetails = async (req, res) => {
+  try {
+    const blogs = await Blog.getAllWithUserDetails();
+    res.json(blogs);
+  } catch (error) {
+    console.error("Failed to fetch blogs with user details:", error);
+    res.status(500).json({ error: "Failed to fetch blogs with user details" });
+  }
+};
+
 export const getBlogById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -21,6 +31,20 @@ export const getBlogById = async (req, res) => {
   } catch (error) {
     console.error("Failed to fetch blog:", error);
     res.status(500).json({ error: "Failed to fetch blog" });
+  }
+};
+
+export const getBlogByIdWithUserDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blog = await Blog.getByIdWithUserDetails(id);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+    res.json(blog);
+  } catch (error) {
+    console.error("Failed to fetch blog with user details:", error);
+    res.status(500).json({ error: "Failed to fetch blog with user details" });
   }
 };
 
@@ -66,5 +90,15 @@ export const deleteBlog = async (req, res) => {
   } catch (error) {
     console.error("Failed to delete blog:", error);
     res.status(500).json({ error: "Failed to delete blog" });
+  }
+};
+
+export const recalculateBlogCounts = async (req, res) => {
+  try {
+    await Blog.recalculateCounts();
+    res.json({ message: "Blog counts recalculated successfully" });
+  } catch (error) {
+    console.error("Failed to recalculate blog counts:", error);
+    res.status(500).json({ error: "Failed to recalculate blog counts" });
   }
 };

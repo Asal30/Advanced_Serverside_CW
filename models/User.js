@@ -47,6 +47,28 @@ const User = {
     const row = await db.get("SELECT COUNT(*) as count FROM users");
     return row.count;
   },
+
+  updateUsername: async (userId, newUsername) => {
+    await db.run(
+      "UPDATE users SET username = ? WHERE id = ?",
+      [newUsername, userId]
+    );
+  },
+
+  updatePassword: async (userId, newPassword) => {
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    await db.run(
+      "UPDATE users SET password = ? WHERE id = ?",
+      [hashedPassword, userId]
+    );
+  },
+
+  updateProfilePicture: async (userId, profileImage) => {
+    await db.run(
+      "UPDATE users SET profile_image = ? WHERE id = ?",
+      [profileImage, userId]
+    );
+  },
 };
 
 export default User;

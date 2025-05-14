@@ -13,6 +13,7 @@ await db.exec(`
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     user_type TEXT DEFAULT 'user',
+    profile_image TEXT, -- Column to store the profile image URL or path
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT chk_user_type CHECK (user_type IN ('admin', 'user'))
   )

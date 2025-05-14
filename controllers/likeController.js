@@ -1,9 +1,11 @@
 import Like from "../models/Like.js";
+import Blog from "../models/Blog.js";
 
 export const addLike = async (req, res) => {
   try {
     const { blogId, userId } = req.body;
     await Like.addLike(blogId, userId);
+    await Blog.updateLikesCount(blogId); // Update likes count in the blogs table
     const likesCount = await Like.getLikesCount(blogId);
     res.json({ message: "Like added", likesCount });
   } catch (error) {
@@ -16,6 +18,7 @@ export const removeLike = async (req, res) => {
   try {
     const { blogId, userId } = req.body;
     await Like.removeLike(blogId, userId);
+    await Blog.updateLikesCount(blogId); // Update likes count in the blogs table
     const likesCount = await Like.getLikesCount(blogId);
     res.json({ message: "Like removed", likesCount });
   } catch (error) {
@@ -35,21 +38,13 @@ export const checkLikeStatus = async (req, res) => {
   }
 };
 
-export const handleLikeEvent = async (io, data) => {
-  const { blogId, userId, action } = data;
-
+export const getLikesCount = async (req, res) => {
   try {
-    if (action === "add") {
-      await Like.addLike(blogId, userId);
-    } else if (action === "remove") {
-      await Like.removeLike(blogId, userId);
-    }
-
-    const updatedLikes = await Like.getLikesCount(blogId);
-
-    // Broadcast the updated like count to all clients
-    io.emit(`likeUpdate-${blogId}`, updatedLikes);
+    const { blogId } = req.query;
+    const likesCount = await Like.getLikesCount(blogId);
+    res.json({ likesCount });
   } catch (error) {
-    console.error("Error handling like event:", error);
+    console.error("Failed to get likes count:", error);
+    res.status(500).json({ error: "Failed to get likes count" });
   }
-};
+}
