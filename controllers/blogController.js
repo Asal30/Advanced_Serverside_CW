@@ -61,9 +61,19 @@ export const getBlogsByUserId = async (req, res) => {
 
 export const createBlog = async (req, res) => {
   try {
-    const { title, description, country, date, image, likes = 0, comments = 0, userId } = req.body;
-    const newBlog = await Blog.create(title, description, country, date, image, likes, comments, userId);
-    res.status(201).json(newBlog);
+    const { title, description, country, date, userId } = req.body;
+    const imageUrl = req.file ? req.file.path : null;
+
+    const newBlog = await Blog.create({
+      title,
+      description,
+      country,
+      date,
+      userId,
+      image: imageUrl,
+    });
+
+    res.status(201).json({ message: "Blog created successfully", blog: newBlog });
   } catch (error) {
     console.error("Failed to create blog:", error);
     res.status(500).json({ error: "Failed to create blog" });

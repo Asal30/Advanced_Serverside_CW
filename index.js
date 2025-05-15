@@ -11,7 +11,7 @@ import blogRoutes from "./routes/blogRoutes.js";
 import likeRoutes from "./routes/likeRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import { authenticate } from "./authMiddleware.js";
+import { authenticate } from "./Middleware/authMiddleware.js";
 
 dotenv.config();
 

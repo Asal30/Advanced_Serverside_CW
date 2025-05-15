@@ -1,13 +1,13 @@
 import { db } from "../config/database.js";
 
 const Blog = {
-  create: async (title, description, country, date, image, likes, comments, userId) => {
+  create: async (title, description, country, date, image, userId) => {
     const result = await db.run(
-      `INSERT INTO blogs (title, description, country, date, image, likes, comments, user_id) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, country, date, image, likes, comments, userId]
+      `INSERT INTO blogs (title, description, country, date, image, user_id) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [title, description, country, date, image, userId]
     );
-    return { id: result.lastID, title, description, country, date, image, likes, comments, userId };
+    return { id: result.lastID, title, description, country, date, image, userId, likes: 0, comments: 0 };
   },
 
   getAll: async () => {
