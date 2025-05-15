@@ -151,7 +151,7 @@ const User = {
 
     // Most liked blog of the user
     const mostLikedBlog = await db.get(
-      `SELECT title, image, description, likes
+      `SELECT id, title, image, description, likes, comments
        FROM blogs
        WHERE user_id = ?
        ORDER BY likes DESC
