@@ -17,6 +17,8 @@ await db.exec(`
     bio TEXT,           -- User's little bio
     city TEXT,          -- User's living city
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    followers_count INTEGER DEFAULT 0,
+    following_count INTEGER DEFAULT 0,
     CONSTRAINT chk_user_type CHECK (user_type IN ('admin', 'user'))
   )
 `);
@@ -81,6 +83,18 @@ await db.exec(`
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (blog_id) REFERENCES blogs(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  )
+`);
+
+await db.exec(`
+  CREATE TABLE IF NOT EXISTS follows (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    follower_id INTEGER NOT NULL,
+    following_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(follower_id, following_id),
+    FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
   )
 `);
 

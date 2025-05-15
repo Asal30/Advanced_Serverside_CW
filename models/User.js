@@ -166,6 +166,72 @@ const User = {
       mostLikedBlog: mostLikedBlog || null,
     };
   },
+
+  follow: async (followerId, followingId) => {
+    if (followerId === followingId) throw new Error("Cannot follow yourself");
+    // Check if already following
+    const exists = await db.get(
+      "SELECT 1 FROM follows WHERE follower_id = ? AND following_id = ?",
+      [followerId, followingId]
+    );
+    if (exists) throw new Error("Already following this user");
+    await db.run(
+      "INSERT INTO follows (follower_id, following_id) VALUES (?, ?)",
+      [followerId, followingId]
+    );
+    await db.run(
+      "UPDATE users SET followers_count = followers_count + 1 WHERE id = ?",
+      [followingId]
+    );
+    await db.run(
+      "UPDATE users SET following_count = following_count + 1 WHERE id = ?",
+      [followerId]
+    );
+  },
+
+  unfollow: async (followerId, followingId) => {
+    const result = await db.run(
+      "DELETE FROM follows WHERE follower_id = ? AND following_id = ?",
+      [followerId, followingId]
+    );
+    if (result.changes === 0) throw new Error("Not following this user");
+    await db.run(
+      "UPDATE users SET followers_count = followers_count - 1 WHERE id = ? AND followers_count > 0",
+      [followingId]
+    );
+    await db.run(
+      "UPDATE users SET following_count = following_count - 1 WHERE id = ? AND following_count > 0",
+      [followerId]
+    );
+  },
+
+  isFollowing: async (followerId, followingId) => {
+    const row = await db.get(
+      "SELECT 1 FROM follows WHERE follower_id = ? AND following_id = ?",
+      [followerId, followingId]
+    );
+    return !!row;
+  },
+
+  getFollowers: async (userId) => {
+    return await db.all(
+      `SELECT users.id, users.username, users.profile_image
+       FROM follows
+       JOIN users ON follows.follower_id = users.id
+       WHERE follows.following_id = ?`,
+      [userId]
+    );
+  },
+
+  getFollowings: async (userId) => {
+    return await db.all(
+      `SELECT users.id, users.username, users.profile_image
+       FROM follows
+       JOIN users ON follows.following_id = users.id
+       WHERE follows.follower_id = ?`,
+      [userId]
+    );
+  },
 };
 
 export default User;

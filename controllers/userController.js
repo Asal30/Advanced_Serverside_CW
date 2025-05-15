@@ -109,3 +109,56 @@ export const getUserStats = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user stats" });
   }
 };
+
+export const followUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { followerId } = req.body;
+    await User.follow(followerId, userId);
+    res.json({ message: "Followed successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const unfollowUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { followerId } = req.body;
+    await User.unfollow(followerId, userId);
+    res.json({ message: "Unfollowed successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const isFollowing = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { followerId } = req.query;
+    const isFollowing = await User.isFollowing(followerId, userId);
+    res.json({ isFollowing });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const getFollowers = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const followers = await User.getFollowers(userId);
+    res.json(followers);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const getFollowings = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const followings = await User.getFollowings(userId);
+    res.json(followings);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
