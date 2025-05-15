@@ -5,7 +5,7 @@ export const addComment = async (req, res) => {
   try {
     const { blogId, userId, comment } = req.body;
     const newComment = await Comment.addComment(blogId, userId, comment);
-    await Blog.updateCommentsCount(blogId); // Update comments count in the blogs table
+    await Blog.updateCommentsCount(blogId);
     res.status(201).json(newComment);
   } catch (error) {
     console.error("Failed to add comment:", error);

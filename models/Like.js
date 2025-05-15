@@ -28,7 +28,7 @@ const Like = {
       `SELECT COUNT(*) AS count FROM likes WHERE blog_id = ? AND user_id = ?`,
       [blogId, userId]
     );
-    return result.count > 0; // Return true if the user has liked the blog
+    return result.count > 0;
   },
 };
 

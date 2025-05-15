@@ -67,7 +67,7 @@ const fetchAndCacheCountries = async () => {
       );
       
       console.log(`Processed ${processed}/${countries.length} countries`);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Throttle requests
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     console.log(`Successfully synchronized ${processed} countries`);

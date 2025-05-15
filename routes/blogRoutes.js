@@ -8,11 +8,11 @@ const router = express.Router();
 router.get("/", getAllBlogs);
 router.get("/with-user", getAllBlogsWithUserDetails);
 router.get("/:id", authenticate, getBlogById);
-router.get("/:id/with-user", authenticate, getBlogByIdWithUserDetails); // New route
+router.get("/:id/with-user", authenticate, getBlogByIdWithUserDetails);
 router.get("/user/:userId", authenticate, getBlogsByUserId);
 router.put("/:id", authenticate, parser.single("image"), updateBlog);
 router.delete("/:id", authenticate, deleteBlog);
-router.post("/recalculate-counts", recalculateBlogCounts); // New route to recalculate counts
+router.post("/recalculate-counts", recalculateBlogCounts);
 router.post("/", authenticate, parser.single("image"), createBlog);
 
 export default router;

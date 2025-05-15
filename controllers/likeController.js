@@ -5,7 +5,7 @@ export const addLike = async (req, res) => {
   try {
     const { blogId, userId } = req.body;
     await Like.addLike(blogId, userId);
-    await Blog.updateLikesCount(blogId); // Update likes count in the blogs table
+    await Blog.updateLikesCount(blogId);
     const likesCount = await Like.getLikesCount(blogId);
     res.json({ message: "Like added", likesCount });
   } catch (error) {
@@ -18,7 +18,7 @@ export const removeLike = async (req, res) => {
   try {
     const { blogId, userId } = req.body;
     await Like.removeLike(blogId, userId);
-    await Blog.updateLikesCount(blogId); // Update likes count in the blogs table
+    await Blog.updateLikesCount(blogId);
     const likesCount = await Like.getLikesCount(blogId);
     res.json({ message: "Like removed", likesCount });
   } catch (error) {

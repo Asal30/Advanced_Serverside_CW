@@ -21,7 +21,6 @@ const Blog = {
     return blogs;
   },
 
-  // New method to fetch blogs with user details
   getAllWithUserDetails: async () => {
     const blogs = await db.all(`
       SELECT 
@@ -90,22 +89,19 @@ const Blog = {
   },
 
   recalculateCounts: async () => {
-    const blogs = await db.all("SELECT id FROM blogs"); // Get all blog IDs
+    const blogs = await db.all("SELECT id FROM blogs");
 
     for (const blog of blogs) {
-      // Get the likes count for the blog
       const likesResult = await db.get(
         `SELECT COUNT(*) AS count FROM likes WHERE blog_id = ?`,
         [blog.id]
       );
 
-      // Get the comments count for the blog
       const commentsResult = await db.get(
         `SELECT COUNT(*) AS count FROM comments WHERE blog_id = ?`,
         [blog.id]
       );
 
-      // Update the blogs table with the recalculated counts
       await db.run(
         `UPDATE blogs SET likes = ?, comments = ? WHERE id = ?`,
         [likesResult.count, commentsResult.count, blog.id]

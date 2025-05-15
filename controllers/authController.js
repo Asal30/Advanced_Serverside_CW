@@ -63,7 +63,7 @@ export const generateApiKey = async (req, res) => {
   try {
       const userId = req.userId;
       if (!userId) {
-          return res.status(400).json({ error: "User ID is missing" });  // Return error if userId is null
+          return res.status(400).json({ error: "User ID is missing" });
       }
 
       const { name } = req.body;
@@ -75,7 +75,7 @@ export const generateApiKey = async (req, res) => {
           name: newKey.name,
       });
   } catch (error) {
-      console.error("Error generating API key:", error.message);  // Log the error for debugging
+      console.error("Error generating API key:", error.message);
       res.status(500).json({
           error: error.message,
           message: "API key generation failed",

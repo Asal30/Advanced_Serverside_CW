@@ -77,7 +77,6 @@ export const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, country, date } = req.body;
-    // If a new image is uploaded, use its path; otherwise, keep the existing image
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : req.body.image;
 
     await Blog.update(id, title, description, country, date, imageUrl);

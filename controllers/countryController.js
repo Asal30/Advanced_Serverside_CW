@@ -5,7 +5,6 @@ export const getCountryData = async (req, res) => {
   try {
     const { name } = req.params;
 
-    // Case-insensitive search
     const countryInDb = await db.get(
       'SELECT * FROM countries WHERE LOWER(name) = LOWER(?)',
       [name]
@@ -21,7 +20,6 @@ export const getCountryData = async (req, res) => {
       });
     }
 
-    // Fetch from external API
     const response = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(name)}`);
     const country = response.data[0];
 
@@ -33,7 +31,6 @@ export const getCountryData = async (req, res) => {
       flag: country.flags.png
     };
 
-    // Save to DB
     await db.run(
       `INSERT INTO countries (name, currency, capital, languages, flag)
        VALUES (?, ?, ?, ?, ?)`,

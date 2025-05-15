@@ -89,7 +89,7 @@ const User = {
   },
 
   updateUser: async (userId, { username, bio, city, profile_image, password }) => {
-    // Build dynamic query
+
     const fields = [];
     const values = [];
 
@@ -110,13 +110,13 @@ const User = {
       values.push(profile_image);
     }
     if (password) {
-      // Hash password if provided
+
       const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
       fields.push("password = ?");
       values.push(hashedPassword);
     }
 
-    if (fields.length === 0) return; // Nothing to update
+    if (fields.length === 0) return;
 
     values.push(userId);
 
@@ -127,13 +127,11 @@ const User = {
   },
 
   getUserStats: async (userId) => {
-    // Total blogs by user
     const totalBlogsRow = await db.get(
       "SELECT COUNT(*) as totalBlogs FROM blogs WHERE user_id = ?",
       [userId]
     );
 
-    // Total likes on user's blogs
     const totalLikesRow = await db.get(
       `SELECT COUNT(*) as totalLikes
        FROM likes
@@ -141,7 +139,6 @@ const User = {
       [userId]
     );
 
-    // Total comments on user's blogs
     const totalCommentsRow = await db.get(
       `SELECT COUNT(*) as totalComments
        FROM comments
@@ -149,7 +146,6 @@ const User = {
       [userId]
     );
 
-    // Most liked blog of the user
     const mostLikedBlog = await db.get(
       `SELECT id, title, image, description, likes, comments
        FROM blogs
@@ -169,7 +165,6 @@ const User = {
 
   follow: async (followerId, followingId) => {
     if (followerId === followingId) throw new Error("Cannot follow yourself");
-    // Check if already following
     const exists = await db.get(
       "SELECT 1 FROM follows WHERE follower_id = ? AND following_id = ?",
       [followerId, followingId]
