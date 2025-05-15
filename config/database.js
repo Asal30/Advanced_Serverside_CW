@@ -14,6 +14,8 @@ await db.exec(`
     password TEXT NOT NULL,
     user_type TEXT DEFAULT 'user',
     profile_image TEXT, -- Column to store the profile image URL or path
+    bio TEXT,           -- User's little bio
+    city TEXT,          -- User's living city
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT chk_user_type CHECK (user_type IN ('admin', 'user'))
   )

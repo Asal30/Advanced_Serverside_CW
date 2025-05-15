@@ -7,10 +7,10 @@ import { db } from "../config/database.js";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password, user_type, userType } = req.body;
+    const { username, email, password, user_type, userType, profile_image, bio, city } = req.body;
     const newUserType = user_type || userType || 'user';
 
-    const user = await User.create(username, email, password, newUserType);
+    const user = await User.create(username, email, password, newUserType, profile_image, bio, city);
 
     const apiKey = crypto.randomBytes(16).toString('hex');
     await db.run("INSERT INTO api_keys (user_id, key) VALUES (?, ?)", [user.id, apiKey]);
