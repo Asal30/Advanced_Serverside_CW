@@ -62,16 +62,9 @@ export const getBlogsByUserId = async (req, res) => {
 export const createBlog = async (req, res) => {
   try {
     const { title, description, country, date, userId } = req.body;
-    const imageUrl = req.file ? req.file.path : null;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-    const newBlog = await Blog.create({
-      title,
-      description,
-      country,
-      date,
-      userId,
-      image: imageUrl,
-    });
+    const newBlog = await Blog.create(title, description, country, date, imageUrl, userId);
 
     res.status(201).json({ message: "Blog created successfully", blog: newBlog });
   } catch (error) {
@@ -83,8 +76,11 @@ export const createBlog = async (req, res) => {
 export const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, country, date, image, likes, comments } = req.body;
-    await Blog.update(id, title, description, country, date, image, likes, comments);
+    const { title, description, country, date } = req.body;
+    // If a new image is uploaded, use its path; otherwise, keep the existing image
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+
+    await Blog.update(id, title, description, country, date, imageUrl);
     res.json({ message: "Blog updated successfully" });
   } catch (error) {
     console.error("Failed to update blog:", error);

@@ -2,13 +2,19 @@ import { db } from "../config/database.js";
 
 const Blog = {
   create: async (title, description, country, date, image, userId) => {
-    const result = await db.run(
-      `INSERT INTO blogs (title, description, country, date, image, user_id) 
+    try {
+      const result = await db.run(
+        `INSERT INTO blogs (title, description, country, date, image, user_id) 
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [title, description, country, date, image, userId]
-    );
-    return { id: result.lastID, title, description, country, date, image, userId, likes: 0, comments: 0 };
+        [title, description, country, date, image, userId]
+      );
+      return { id: result.lastID, title, description, country, date, image, userId, likes: 0, comments: 0 };
+    } catch (err) {
+      console.error('DB insert failed:', err.message);
+      throw err;
+    }
   },
+
 
   getAll: async () => {
     const blogs = await db.all("SELECT * FROM blogs ORDER BY created_at DESC");
@@ -52,12 +58,12 @@ const Blog = {
     return blogs;
   },
 
-  update: async (id, title, description, country, date, image, likes, comments) => {
+  update: async (id, title, description, country, date, image) => {
     await db.run(
       `UPDATE blogs 
-       SET title = ?, description = ?, country = ?, date = ?, image = ?, likes = ?, comments = ? 
+       SET title = ?, description = ?, country = ?, date = ?, image = ?
        WHERE id = ?`,
-      [title, description, country, date, image, likes, comments, id]
+      [title, description, country, date, image, id]
     );
   },
 

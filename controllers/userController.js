@@ -3,11 +3,8 @@ import User from "../models/User.js";
 export const updateUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    // If using FormData, fields are in req.body and files in req.file or req.files
     const { username, bio, city, password } = req.body;
-    let profile_image = req.body.profile_image;
-
-    // If you handle file uploads, set profile_image = req.file.path or similar
+    let profile_image = req.file ? `/uploads/ProfileImages/${req.file.filename}` : req.body.profile_image;
 
     await User.updateUser(userId, { username, bio, city, profile_image, password });
     res.json({ message: "User updated successfully" });
@@ -46,10 +43,10 @@ export const updatePassword = async (req, res) => {
 export const updateProfilePicture = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { profileImage } = req.body;
+    const profileImage = req.file ? `/uploads/ProfileImages/${req.file.filename}` : null;
 
     await User.updateProfilePicture(userId, profileImage);
-    res.json({ message: "Profile picture updated successfully" });
+    res.json({ message: "Profile picture updated successfully", profileImage });
   } catch (error) {
     console.error("Failed to update profile picture:", error);
     res.status(500).json({ error: "Failed to update profile picture" });
